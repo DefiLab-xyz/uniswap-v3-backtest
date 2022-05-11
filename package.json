@@ -1,8 +1,9 @@
 {
   "name": "uniswap-v3-backtest",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Fast and efficient method for testing Uniswap V3 LP Strategies",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \\\"Error: no test specified\\\" && exit 1"
   },
@@ -16,7 +17,6 @@
     "LP Strategy Backtester",
     "backtester",
     "defi",
-    "crypto",
     "backtest"
   ],
   "author": "staceb",
@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/DefiLab-xyz/uniswap-v3-backtest/issues"
   },
-  "homepage": "https://github.com/DefiLab-xyz/uniswap-v3-backtest#readme"
+  "homepage": "https://github.com/DefiLab-xyz/uniswap-v3-backtest#readme",
+  "dependencies": {
+    "node-fetch": "^3.2.4"
+  }
 }

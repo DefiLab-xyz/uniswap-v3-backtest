@@ -1,3 +1,5 @@
+import fetch from 'node-fetch'
+
 const urlForProtocol = (protocol) => {
   return protocol === 1 ? "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis" : 
     protocol === 2 ? "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal" :
@@ -26,7 +28,7 @@ const requestBody = (request) => {
 
 }
 
-exports.getPoolHourData = async function(pool, fromdate, protocol) {
+export const getPoolHourData = async (pool, fromdate, protocol) => {
 
   const query =  `query PoolHourDatas($pool: ID!, $fromdate: Int!) {
   poolHourDatas ( where:{ pool:$pool, periodStartUnix_gt:$fromdate close_gt: 0}, orderBy:periodStartUnix, orderDirection:desc, first:1000) {
@@ -63,6 +65,72 @@ exports.getPoolHourData = async function(pool, fromdate, protocol) {
     }
     else {
       console.log("nothing returned from getPoolHourData")
+      return null;
+    }
+
+  } catch (error) {
+    return {error: error};
+  }
+
+}
+
+
+export const poolById = async (id, protocol) => {
+
+  const url = urlForProtocol(protocol);
+
+  const poolQueryFields = `{
+    id
+    feeTier
+    totalValueLockedUSD
+    totalValueLockedETH
+    token0Price
+    token1Price  
+    token0 {
+      id
+      symbol
+      name
+      decimals
+    }
+    token1 {
+      id
+      symbol
+      name
+      decimals
+    }
+    poolDayData(orderBy: date, orderDirection:desc,first:1)
+    {
+      date
+      volumeUSD
+      tvlUSD
+      feesUSD
+      liquidity
+      high
+      low
+      volumeToken0
+      volumeToken1
+      close
+      open
+    }
+  }`
+
+  const query =  `query Pools($id: ID!) { id: pools(where: { id: $id } orderBy:totalValueLockedETH, orderDirection:desc) 
+   ${poolQueryFields}
+  }`
+
+  try {
+
+    const response = await fetch(url, requestBody({query: query, variables: {id: id}}));
+    const data = await response.json();
+
+    if (data && data.data) {
+      const pools = data.data;
+ 
+      if (pools.id && pools.id.length && pools.id.length === 1) {
+        return pools.id[0]
+      }
+    }
+    else {
       return null;
     }
 
