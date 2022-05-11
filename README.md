@@ -24,7 +24,7 @@ const backtestResults = await uniswapStrategyBacktest("0x88e6a0c2ddd26feeb64f039
 
 Example Output: 
 
-```json
+```
 
 // Hourly //
 
