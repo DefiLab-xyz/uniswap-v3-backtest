@@ -103,18 +103,18 @@ uniswapStrategyBacktest(
 
 **investmentAmount** = the initial amount invested in the LP strategy. This value is presumed to be denominated in the base token of the pair (Token0) but can be overridden to use the quote token with the options argument. 
 
-**minRange** = the lower bound of the LP Strategy. As with investmentAmount, presumed to be in base but can be overridden to use quote.
+**minRange** = the lower bound of the LP Strategy. As with investmentAmount, presumed to be in base but can be overridden to use quote.    
 **maxRange** = the upper bound of the LP Strategy. As with investmentAmount, presumed to be in base but can be overridden to use quote.
 
 **options** = Optional values that override default values. Formed as a JSON key value pair `{days: 30, protocol: 0, priceToken: 0, period: "hourly"}`    
-    **days** = number of days to run the backtest from todays date. Defaults to 30, Currently maxed to 30.     
-    **priceToken** = 0 = values in baseToken, 1 = values in quoteToken (Token0, Token1) 
-    **period** = Calculate fees "daily" or "hourly", defaults to "hourly"  
-    **protocol** - Which chain, sidechain or L2 to use:  
-        0 = Ethereum (default)    
-        1 = Optimism    
-        2 = Arbitrum   
-        3 = Polygon   
+        **days** = number of days to run the backtest from todays date. Defaults to 30, Currently maxed to 30.     
+        **priceToken** = 0 = values in baseToken, 1 = values in quoteToken (Token0, Token1) 
+        **period** = Calculate fees "daily" or "hourly", defaults to "hourly"  
+        **protocol** - Which chain, sidechain or L2 to use:  
+            0 = Ethereum (default)    
+            1 = Optimism    
+            2 = Arbitrum   
+            3 = Polygon   
 
 
 ## **uniswapStrategyBacktest() output**
