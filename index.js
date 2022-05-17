@@ -18,15 +18,15 @@ export const uniswapStrategyBacktest = async ( pool, investmentAmount, minRange,
     const hourlyPriceData = await getPoolHourData(pool, DateByDaysAgo(opt.days), opt.protocol);
     
     if (poolData && hourlyPriceData && hourlyPriceData.length > 0) {
-      const entryPrice = opt.priceToken === 0 ? hourlyPriceData[0].close : 1 / hourlyPriceData[0].close;
+
+      const backtestData = hourlyPriceData.reverse();
+      const entryPrice = opt.priceToken === 1 ?  1 / backtestData[0].close : backtestData[0].close
       const tokens = tokensForStrategy(minRange, maxRange, investmentAmount, entryPrice, poolData.token1.decimals - poolData.token0.decimals);
       const liquidity = liquidityForStrategy(entryPrice, minRange, maxRange, tokens[0], tokens[1], poolData.token0.decimals, poolData.token1.decimals);
       const unbLiquidity = liquidityForStrategy(entryPrice, Math.pow(1.0001, -887220), Math.pow(1.0001, 887220), tokens[0], tokens[1], poolData.token0.decimals, poolData.token1.decimals);
-
-      const hourlyBacktest = calcFees(hourlyPriceData, poolData, opt.priceToken, liquidity, unbLiquidity, investmentAmount, minRange, maxRange);
+      const hourlyBacktest = calcFees(backtestData, poolData, opt.priceToken, liquidity, unbLiquidity, investmentAmount, minRange, maxRange);
       return opt.period === 'daily' ? pivotFeeData(hourlyBacktest, opt.priceToken, investmentAmount) : hourlyBacktest;
     }
-
   }
 }
 

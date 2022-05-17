@@ -169,11 +169,10 @@ export const calcFees = (data, pool, priceToken, liquidity, unboundedLiquidity, 
     }
 
     const date = new Date(d.periodStartUnix*1000);
-
     return {
       ...d,
-      day: date.getDate(),
-      month: date.getMonth(),
+      day: date.getUTCDate(),
+      month: date.getUTCMonth(),
       year: date.getFullYear(), 
       fg0 : fg[0],
       fg1 : fg[1],
@@ -253,6 +252,5 @@ export const pivotFeeData = (data, priceToken, investment) => {
       }
     }
   });
-
   return pivot;
 }
