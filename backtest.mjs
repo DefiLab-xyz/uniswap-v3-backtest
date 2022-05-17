@@ -124,8 +124,7 @@ export const liquidityForStrategy = (price, low, high, tokens0, tokens1, decimal
 export const calcFees = (data, pool, priceToken, liquidity, unboundedLiquidity, investment, min, max) => {
 
   return data.map((d, i) => {
-
-    const fg = i - 1 < 0 ? [0, 0] : calcUnboundedFees(d.feeGrowthGlobal0X128, data[(i-1)].feeGrowthGlobal0X128, d.feeGrowthGlobal1X128, data[(i-1)].feeGrowthGlobal1X128, pool);
+    const fg = i == 0 ? [0, 0] : calcUnboundedFees(data[i-1].feeGrowthGlobal0X128, d.feeGrowthGlobal0X128, data[i-1].feeGrowthGlobal1X128, d.feeGrowthGlobal1X128, pool);
 
     const low = priceToken === 0 ? d.low : 1 / (d.low === '0' ? 1 : d.low);
     const high = priceToken === 0 ? d.high : 1 / (d.high === '0' ? 1 : d.high);
