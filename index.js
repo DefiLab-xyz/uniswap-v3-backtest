@@ -1,8 +1,8 @@
 import { poolById, getPoolHourData } from './uniPoolData.mjs'
 import { tokensForStrategy, liquidityForStrategy, calcFees, pivotFeeData } from './backtest.mjs'
 
-const DateByDaysAgo = (days) => {
-  const date = new Date();
+const DateByDaysAgo = (days, endDate = null) => {
+  const date = !!endDate ? new Date(endDate * 1000) : new Date();
   return Math.round( (date.setDate(date.getDate() - days) / 1000 ));
 }
 
@@ -10,12 +10,19 @@ const DateByDaysAgo = (days) => {
 // Required = Pool ID, investmentAmount (token0 by default), minRange, maxRange, options = { days, protocol, baseToken }
 
 export const uniswapStrategyBacktest = async ( pool, investmentAmount, minRange, maxRange, options = {}) => {
-  
+
   const opt = {days: 30, protocol: 0, priceToken: 0, period: "hourly", ...options };
 
   if (pool) {
     const poolData = await poolById(pool);
-    const hourlyPriceData = await getPoolHourData(pool, DateByDaysAgo(opt.days), opt.protocol);
+    let { startTimestamp, endTimestamp, days } = opt;
+    if (!endTimestamp) {
+      endTimestamp = Math.floor(Date.now() / 1000);
+    }
+    if (!startTimestamp && days) {
+      startTimestamp = DateByDaysAgo(days, endTimestamp);
+    }
+    const hourlyPriceData = await getPoolHourData(pool, startTimestamp, endTimestamp, opt.protocol);
     
     if (poolData && hourlyPriceData && hourlyPriceData.length > 0) {
 
