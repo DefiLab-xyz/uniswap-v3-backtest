@@ -28,10 +28,10 @@ const requestBody = (request) => {
 
 }
 
-export const getPoolHourData = async (pool, fromdate, protocol) => {
+export const getPoolHourData = async (pool, fromdate, todate, protocol) => {
 
-  const query =  `query PoolHourDatas($pool: ID!, $fromdate: Int!) {
-  poolHourDatas ( where:{ pool:$pool, periodStartUnix_gt:$fromdate close_gt: 0}, orderBy:periodStartUnix, orderDirection:desc, first:1000) {
+  const query =  `query PoolHourDatas($pool: ID!, $fromdate: Int!, $todate: Int!) {
+  poolHourDatas ( where:{ pool:$pool, periodStartUnix_gt:$fromdate periodStartUnix_lt:$todate close_gt: 0}, orderBy:periodStartUnix, orderDirection:desc, first:1000) {
     periodStartUnix
     liquidity
     high
@@ -56,7 +56,7 @@ export const getPoolHourData = async (pool, fromdate, protocol) => {
   const url = urlForProtocol(protocol);
 
   try {
-    const response = await fetch(url, requestBody({query: query, variables: {pool: pool, fromdate: fromdate} }));
+    const response = await fetch(url, requestBody({query: query, variables: {pool: pool, fromdate: fromdate, todate} }));
     const data = await response.json();
 
     if (data && data.data && data.data.poolHourDatas) {

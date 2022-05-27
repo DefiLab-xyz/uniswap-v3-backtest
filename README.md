@@ -18,8 +18,36 @@ npm install uniswap-v3-backtest
 ## Usage 
 
 ```js
+// get results for last 25 days
 import uniswapStrategyBacktest from 'uniswap-v3-backtest'
 const backtestResults = await uniswapStrategyBacktest("0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640", 1000, 2120.09, 2662.99, {days: 25, period: "daily"});
+
+// get results from start timestamp for lp from quote token 
+await uniswapStrategyBacktest(
+  "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640", 
+  1,
+  1/2662.99,
+  1/2120.09,
+  {startTimestamp: 1653364800, period: "daily", priceToken: 1}
+);
+
+// get results from start timestamp to end timestamp for lp from quote token 
+await uniswapStrategyBacktest(
+  "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640", 
+  1,
+  1/2662.99,
+  1/2120.09,
+  {startTimestamp: 1653364800, endTimestamp: 1653374800, period: "daily", priceToken: 1}
+);
+
+// get results for n days before end timestamp for lp from quote token 
+await uniswapStrategyBacktest(
+  "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640", 
+  1,
+  1/2662.99,
+  1/2120.09,
+  {endTimestamp: 1653364800, days: 1, period: "daily", priceToken: 1}
+);
 ```
 
 Example Output: 
@@ -108,6 +136,8 @@ uniswapStrategyBacktest(
 
 **options** = Optional values that override default values. Formed as a JSON key value pair `{days: 30, protocol: 0, priceToken: 0, period: "hourly"}`    
         **days** = number of days to run the backtest from todays date. Defaults to 30, Currently maxed to 30.     
+        **startTimestamp** = timestamp in seconds for LP start. Optional.     
+        **endTimestamp** = timestamp in seconds for LP end. Optional. If used with *days* provides results for `n` days before timestamp  
         **priceToken** = 0 = values in baseToken, 1 = values in quoteToken (Token0, Token1) 
         **period** = Calculate fees "daily" or "hourly", defaults to "hourly"  
         **protocol** - Which chain, sidechain or L2 to use:  
